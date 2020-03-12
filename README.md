@@ -29,7 +29,7 @@ Nous nous limiterons aux joueurs disposant d'un ordinateur tournant sous n'impor
 - Java 1.8
 - Plateforme : Windows 7-10, Linux, MacOs
 
-###Autheurs
+### Auteurs
 - HEBUTERNE Fabien
 - MADAULE Damien
 - ROQUELAURE Vincent
