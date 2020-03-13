@@ -1,10 +1,12 @@
 package fr.ynov.tdd.database;
 
+import fr.ynov.tdd.domain.Statistic;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -52,5 +54,20 @@ public class DatabaseProviderTest {
 
         databaseProvider.addWords(words, catId);
         assertEquals(2, databaseProvider.getWordsByCatId(catId).size());
+    }
+
+    @Test
+    @Order(4)
+    public void should_add_stats_when_game_end() {
+        ArrayList<Statistic> statistics = new ArrayList<>();
+        statistics.add(new Statistic("Poney", 6, new Date()));
+        statistics.add(new Statistic("Hamburger", 4, new Date()));
+        statistics.add(new Statistic("Mistermv", 5, new Date()));
+
+        for (Statistic statistic : statistics) {
+            databaseProvider.addStatisticsAtEndGame(statistic);
+        }
+
+        assertEquals(3, databaseProvider.getAllStatistics().size());
     }
 }
