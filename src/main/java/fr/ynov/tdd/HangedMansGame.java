@@ -4,10 +4,7 @@ import fr.ynov.tdd.database.DatabaseProvider;
 import fr.ynov.tdd.domain.MenuType;
 import fr.ynov.tdd.domain.services.GameService;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import java.util.*;
 
 public class HangedMansGame {
 
@@ -72,14 +69,25 @@ public class HangedMansGame {
                             databaseProvider.addCategory(newCategory);
                             break;
                         case 2:
+                            System.out.println("Merci de choisir une catégorie avant d'ajouter un mot !");
+                            MenuType chooseOtherCategoryMenu = MenuType.CHOOSE_CATEGORY_MENU;
+                            putCategoryInMenu(databaseProvider, chooseOtherCategoryMenu);
+                            categoryChoice = checkInputScanner(sc, categoryChoice, chooseOtherCategoryMenu);
+                            System.out.println("Merci d'entrer un mot ...");
+                            // Need scanner here to empty previous scanner
+                            sc.nextLine();
+                            String newWord = sc.nextLine();
+                            databaseProvider.addWords(new ArrayList<>(Collections.singletonList(newWord)), categoryChoice);
+                            break;
+                        case 3:
                             difficultyChoice = checkInputScanner(sc, difficultyChoice, MenuType.CHOOSE_DIFFICULTY_MENU);
                             difficulty = MenuType.CHOOSE_DIFFICULTY_MENU.getOptions().get(difficultyChoice - 1);
                             break;
-                        case 3:
+                        case 4:
                             languageChoice = checkInputScanner(sc, difficultyChoice, MenuType.CHOOSE_LANGUAGE_MENU);
                             language = MenuType.CHOOSE_LANGUAGE_MENU.getOptions().get(languageChoice - 1);
                             break;
-                        case 4:
+                        case 5:
                             System.out.println(
                                     "#### CREDITS ####\n" +
                                     "Roquelaure Vincent\n" +
@@ -87,7 +95,7 @@ public class HangedMansGame {
                                     "Madaule Damien\n\n" +
                                     "IntelliJ IDEA");
                             break;
-                        case 5:
+                        case 6:
                             break;
                     }
                     break;
