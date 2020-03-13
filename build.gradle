@@ -22,3 +22,10 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+jar {
+    manifest {
+        attributes "Main-Class": "fr.ynov.tdd.HangedMansGame"
+        attributes "Class-Path": configurations.compile.collect { it.absolutePath }.join(" ")
+    }
+}
