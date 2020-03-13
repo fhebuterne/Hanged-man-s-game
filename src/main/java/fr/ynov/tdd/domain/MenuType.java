@@ -26,12 +26,15 @@ public enum MenuType {
         return options;
     }
     public String parseMenu (){
+        // Initialisation du menu
         StringBuilder str;
         str = new StringBuilder("### MENU " + this.menuType + " ###\n");
+        //Ajout des élements au menu
         for (String item: this.options)
         {
             str.append(this.options.indexOf(item) + 1).append(" - ").append(item).append("\n");
         }
+        //Ajout de la question au menu
         str.append("Quel est votre choix ?\n");
         return str.toString();
     }
