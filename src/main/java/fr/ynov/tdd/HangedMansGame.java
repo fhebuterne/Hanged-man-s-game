@@ -6,9 +6,14 @@ import fr.ynov.tdd.domain.services.GameService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class HangedMansGame {
+
+    private static String language = "Français";
+    private static String difficulty = "Facile";
+    private static String categoryName = null;
 
     private static void addDefaultTable(DatabaseProvider databaseProvider) {
         if (databaseProvider.getAllCategories().size() == 1) {
@@ -27,68 +32,56 @@ public class HangedMansGame {
         databaseProvider.initDatabase();
         addDefaultTable(databaseProvider);
 
-        boolean isReady = false;
-        String categorie = null;
-        String difficulty = "Facile";
-        String language = "Français";
         Scanner sc = new Scanner(System.in);
 
-        String categorySelected = "";
+        menuSelector(sc, databaseProvider);
+
+        System.out.println(categoryName + " - " + difficulty + " - " + language);
+
+        String game = new GameService(databaseProvider.getWordsByCatId(databaseProvider.getCatIdByName(categoryName))).startGame(new Scanner(System.in));
+        if (game.equals("")) {
+            System.out.println("LOOOOSSERRR");
+        } else {
+            System.out.println("Bravo vous avez trouvé le mot " + game);
+        }
+    }
+
+    // TODO : Put in other class
+    private static void menuSelector(Scanner sc, DatabaseProvider databaseProvider) {
+        boolean isReady = false;
+        int optionChoice = -1, difficultyChoice = -1, languageChoice = -1, categoryChoice = -1;
 
         while (!isReady) {
-            System.out.println(MenuType.START_APP_MENU.parseMenu());
-            int choiceUser = sc.nextInt();
-            while (choiceUser > MenuType.START_APP_MENU.getOptions().size() || choiceUser < 1) {
-                System.out.println(MenuType.START_APP_MENU.parseMenu());
-                choiceUser = sc.nextInt();
-            }
-            switch (choiceUser) {
+            int userChoice = menuAppFirstStart(sc);
+            switch (userChoice) {
                 case 1:
-                    int choixCategory = -1;
-
-                    ArrayList<String> allCategories = databaseProvider.getAllCategories();
                     MenuType chooseCategoryMenu = MenuType.CHOOSE_CATEGORY_MENU;
-                    chooseCategoryMenu.setOptions(allCategories);
-
-                    while (choixCategory > chooseCategoryMenu.getOptions().size() || choixCategory < 1) {
-                        System.out.println(chooseCategoryMenu.parseMenu());
-                        choixCategory = sc.nextInt();
-                        categorySelected = chooseCategoryMenu.getOptions().get(choixCategory - 1);
-                    }
-                    categorie = chooseCategoryMenu.getOptions().get(choixCategory - 1);
+                    putCategoryInMenu(databaseProvider, chooseCategoryMenu);
+                    categoryChoice = checkInputScanner(sc, categoryChoice, chooseCategoryMenu);
+                    categoryName = chooseCategoryMenu.getOptions().get(categoryChoice - 1);
                     isReady = true;
                     break;
                 case 2:
-                    int choixOption = -1;
-                    while (choixOption > MenuType.OPTION_MENU.getOptions().size() || choixOption < 1) {
-                        System.out.println(MenuType.OPTION_MENU.parseMenu());
-                        choixOption = sc.nextInt();
-                    }
-                    switch (choixOption) {
-                        case 1:
-                            int choixDificulty = -1;
-                            while (choixDificulty > MenuType.CHOOSE_DIFICULTY_MENU.getOptions().size() || choixDificulty < 1) {
-                                System.out.println(MenuType.CHOOSE_DIFICULTY_MENU.parseMenu());
-                                choixDificulty = sc.nextInt();
-                                difficulty = MenuType.CHOOSE_DIFICULTY_MENU.getOptions().get(choixDificulty - 1);
-                            }
-                            break;
+                    optionChoice = checkInputScanner(sc, optionChoice, MenuType.OPTION_MENU);
+                    switch (optionChoice) {
                         case 2:
-                            int choixLanguage = -1;
-                            while (choixLanguage > MenuType.CHOOSE_LANGUAGE_MENU.getOptions().size() || choixLanguage < 1) {
-                                System.out.println(MenuType.CHOOSE_LANGUAGE_MENU.parseMenu());
-                                choixLanguage = sc.nextInt();
-                                language = MenuType.CHOOSE_LANGUAGE_MENU.getOptions().get(choixLanguage - 1);
-                            }
+                            difficultyChoice = checkInputScanner(sc, difficultyChoice, MenuType.CHOOSE_DIFFICULTY_MENU);
+                            difficulty = MenuType.CHOOSE_DIFFICULTY_MENU.getOptions().get(difficultyChoice - 1);
                             break;
                         case 3:
-                            System.out.println("#### CREDITS ####\n" +
+                            languageChoice = checkInputScanner(sc, difficultyChoice, MenuType.CHOOSE_LANGUAGE_MENU);
+                            language = MenuType.CHOOSE_LANGUAGE_MENU.getOptions().get(languageChoice - 1);
+                            break;
+                        case 4:
+                            System.out.println(
+                                    "#### CREDITS ####\n" +
                                     "Roquelaure Vincent\n" +
                                     "Hebuterne Fabien\n" +
                                     "Madaule Damien\n\n" +
                                     "IntelliJ IDEA");
                             break;
-                        case 4:
+                        case 5:
+                            menuSelector(sc, databaseProvider);
                             break;
                     }
                     break;
@@ -97,13 +90,31 @@ public class HangedMansGame {
                     break;
             }
         }
-        System.out.println(categorie + " - " + difficulty + " - " + language);
-
-        String game = new GameService(databaseProvider.getWordsByCatId(databaseProvider.getCatIdByName(categorySelected))).startGame(new Scanner(System.in));
-        if (game.equals("")) {
-            System.out.println("LOOOOSSERRR");
-        } else {
-            System.out.println("Bravo vous avez trouvé le mot " + game);
-        }
     }
+
+    private static int menuAppFirstStart(Scanner sc) {
+        System.out.println(MenuType.START_APP_MENU.parseMenu());
+        int userChoice = sc.nextInt();
+        return checkInputScanner(sc, userChoice, MenuType.START_APP_MENU);
+    }
+
+    private static MenuType putCategoryInMenu(DatabaseProvider databaseProvider, MenuType categoryMenu) {
+        ArrayList<String> allCategories = databaseProvider.getAllCategories();
+        categoryMenu.setOptions(allCategories);
+        return categoryMenu;
+    }
+
+    private static int checkInputScanner(Scanner sc, int choixCategory, MenuType chooseCategoryMenu) {
+        while (choixCategory > chooseCategoryMenu.getOptions().size() || choixCategory < 1) {
+            System.out.println(chooseCategoryMenu.parseMenu());
+            try {
+                choixCategory = sc.nextInt();
+            } catch (InputMismatchException e) {
+                choixCategory = 1;
+            }
+        }
+        return choixCategory;
+    }
+
+
 }
