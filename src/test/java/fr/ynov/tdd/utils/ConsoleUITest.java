@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ConsoleUITest {
 
@@ -36,7 +36,7 @@ class ConsoleUITest {
                         "#################################################################################\n";
 
         // when
-        String ui = ConsoleUI.showUI(wordName, stateHandMan, currentAttempt, maxAttempt, chars);
+        String ui = new ConsoleUI().showGameUi(wordName, stateHandMan, currentAttempt, maxAttempt, chars);
 
         // then
         assertEquals(expected, ui);
