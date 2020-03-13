@@ -11,9 +11,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ConsoleUITest {
 
     @Test
-    void should_print_ui_with_information() {
+    void should_print_ui_with_information_and_hidden_word() {
         // given
-        String wordName = "TESTWORD";
+        String wordNameHidden = "_ _ _ _ _ _ _ _ ";
         HandManState stateHandMan = HandManState.HAND_MAN_STATE_0;
         int currentAttempt = 0;
         int maxAttempt = 6;
@@ -36,7 +36,7 @@ class ConsoleUITest {
                         "#################################################################################\n";
 
         // when
-        String ui = new ConsoleUI().showGameUi(wordName, stateHandMan, currentAttempt, maxAttempt, chars);
+        String ui = new ConsoleUI().showGameUi(wordNameHidden, stateHandMan, currentAttempt, maxAttempt, chars);
 
         // then
         assertEquals(expected, ui);
