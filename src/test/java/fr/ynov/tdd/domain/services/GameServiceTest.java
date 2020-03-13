@@ -40,7 +40,7 @@ class GameServiceTest {
         String wordResult = new GameService(words).startGame(scanner);
 
         // then
-        assertEquals("", wordResult);
+        assertEquals(wordNameExcepted.toLowerCase(), wordResult);
     }
 
 }

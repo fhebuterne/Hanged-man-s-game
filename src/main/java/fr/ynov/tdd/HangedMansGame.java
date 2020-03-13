@@ -39,10 +39,10 @@ public class HangedMansGame {
         System.out.println(categoryName + " - " + difficulty + " - " + language);
 
         String game = new GameService(databaseProvider.getWordsByCatId(databaseProvider.getCatIdByName(categoryName))).startGame(new Scanner(System.in));
-        if (game.equals("")) {
-            System.out.println("LOOOOSSERRR");
+        if (game.equals(game.toLowerCase())) {
+            System.out.println("LOOOOSSERRR, le mot était : " + game);
         } else {
-            System.out.println("Bravo vous avez trouvé le mot " + game);
+            System.out.println("Bravo vous avez trouvé le mot : " + game);
         }
     }
 
@@ -64,6 +64,13 @@ public class HangedMansGame {
                 case 2:
                     optionChoice = checkInputScanner(sc, optionChoice, MenuType.OPTION_MENU);
                     switch (optionChoice) {
+                        case 1:
+                            // Need scanner here to empty previous scanner
+                            sc.nextLine();
+                            String newCategory;
+                            newCategory = sc.nextLine();
+                            databaseProvider.addCategory(newCategory);
+                            break;
                         case 2:
                             difficultyChoice = checkInputScanner(sc, difficultyChoice, MenuType.CHOOSE_DIFFICULTY_MENU);
                             difficulty = MenuType.CHOOSE_DIFFICULTY_MENU.getOptions().get(difficultyChoice - 1);
@@ -81,7 +88,6 @@ public class HangedMansGame {
                                     "IntelliJ IDEA");
                             break;
                         case 5:
-                            menuSelector(sc, databaseProvider);
                             break;
                     }
                     break;

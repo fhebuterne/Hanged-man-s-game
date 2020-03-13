@@ -22,6 +22,7 @@ public class GameService {
 
     public GameService(ArrayList<String> words) {
         this.word = words.get(new Random().nextInt(words.size())).replace(" ", "");
+        this.word = this.word.toUpperCase();
     }
 
     public String startGame(Scanner scanner) {
@@ -37,7 +38,7 @@ public class GameService {
         }
 
         if (currentAttempt == maxAttempt) {
-            return "";
+            return word.toLowerCase();
         }
 
         return word;
@@ -46,7 +47,7 @@ public class GameService {
     private void checkInputUser(Scanner scanner) {
         System.out.println("Merci d'entrer une lettre ...");
         if (scanner.hasNext() && !endGame) {
-            Character character = scanner.nextLine().charAt(0);
+            Character character = scanner.nextLine().toUpperCase().charAt(0);
             if (isAnError(character)) {
                 currentAttempt++;
                 handManState = HandManState.valueOf("HAND_MAN_STATE_" + currentAttempt);
