@@ -19,7 +19,7 @@ public class DatabaseProvider {
         PROPERTIES.put("user", DatabaseEnum.DATABASE_USER.getValue());
         PROPERTIES.put("password", DatabaseEnum.DATABASE_PASSWORD.getValue());
 
-        connectionURL = MessageFormat.format("jdbc:h2:{0}{1};mode=MySQL;mv_store=false",
+        connectionURL = MessageFormat.format("jdbc:h2:{0}{1};mode=MySQL;mv_store=false;",
                 shouldCreateDbInMemory ? "mem:" : "./",
                 DatabaseEnum.DATABASE_NAME.getValue());
     }
@@ -48,6 +48,24 @@ public class DatabaseProvider {
         } catch (SQLException sqlE) {
             sqlE.printStackTrace();
         }
+    }
+
+    public ArrayList<String> getAllCategories() {
+        ArrayList<String> categories = new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(DatabaseEnum.GET_CATEGORIES.getValue());
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                categories.add(resultSet.getString("name"));
+            }
+            resultSet.close();
+            preparedStatement.close();
+        } catch (SQLException sqlE) {
+            sqlE.printStackTrace();
+        }
+
+        return categories;
     }
 
     public int getCatIdByName(String catName) {
