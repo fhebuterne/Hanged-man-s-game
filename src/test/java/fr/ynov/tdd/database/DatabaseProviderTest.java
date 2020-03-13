@@ -3,7 +3,6 @@ package fr.ynov.tdd.database;
 import fr.ynov.tdd.domain.Statistic;
 import org.junit.jupiter.api.*;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 

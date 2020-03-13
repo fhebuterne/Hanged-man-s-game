@@ -1,5 +1,6 @@
 package fr.ynov.tdd;
 
+import fr.ynov.tdd.database.DatabaseProvider;
 import fr.ynov.tdd.domain.MenuType;
 import fr.ynov.tdd.domain.services.GameService;
 
@@ -9,28 +10,52 @@ import java.util.Scanner;
 
 public class HangedMansGame {
 
+    private static void addDefaultTable(DatabaseProvider databaseProvider) {
+        if (databaseProvider.getAllCategories().size() == 1) {
+            databaseProvider.addCategory("FILMS");
+            databaseProvider.addCategory("ANIMAUX");
+            databaseProvider.addCategory("LIEUX");
+
+            databaseProvider.addWords(new ArrayList<>(Arrays.asList("AVATAR", "TERMINATOR", "INTOUCHABLES")), databaseProvider.getCatIdByName("FILMS"));
+            databaseProvider.addWords(new ArrayList<>(Arrays.asList("CHIEN", "CHAT", "TORTUE")), databaseProvider.getCatIdByName("ANIMAUX"));
+            databaseProvider.addWords(new ArrayList<>(Arrays.asList("BORDEAUX", "PARIS", "BREST")), databaseProvider.getCatIdByName("LIEUX"));
+        }
+    }
+
     public static void main(String[] args) {
+        DatabaseProvider databaseProvider = new DatabaseProvider(false);
+        databaseProvider.initDatabase();
+        addDefaultTable(databaseProvider);
+
         boolean isReady = false;
         String categorie = null;
         String difficulty = "Facile";
         String language = "Français";
         Scanner sc = new Scanner(System.in);
 
+        String categorySelected = "";
+
         while (!isReady) {
             System.out.println(MenuType.START_APP_MENU.parseMenu());
-            int choixMain = sc.nextInt();
-            while (choixMain > MenuType.START_APP_MENU.getOptions().size() || choixMain < 1) {
+            int choiceUser = sc.nextInt();
+            while (choiceUser > MenuType.START_APP_MENU.getOptions().size() || choiceUser < 1) {
                 System.out.println(MenuType.START_APP_MENU.parseMenu());
-                choixMain = sc.nextInt();
+                choiceUser = sc.nextInt();
             }
-            switch (choixMain) {
+            switch (choiceUser) {
                 case 1:
                     int choixCategory = -1;
-                    while (choixCategory > MenuType.CHOOSE_CATEGORY_MENU.getOptions().size() || choixCategory < 1) {
-                        System.out.println(MenuType.CHOOSE_CATEGORY_MENU.parseMenu());
+
+                    ArrayList<String> allCategories = databaseProvider.getAllCategories();
+                    MenuType chooseCategoryMenu = MenuType.CHOOSE_CATEGORY_MENU;
+                    chooseCategoryMenu.setOptions(allCategories);
+
+                    while (choixCategory > chooseCategoryMenu.getOptions().size() || choixCategory < 1) {
+                        System.out.println(chooseCategoryMenu.parseMenu());
                         choixCategory = sc.nextInt();
+                        categorySelected = chooseCategoryMenu.getOptions().get(choixCategory - 1);
                     }
-                    categorie = MenuType.CHOOSE_CATEGORY_MENU.getOptions().get(choixCategory - 1);
+                    categorie = chooseCategoryMenu.getOptions().get(choixCategory - 1);
                     isReady = true;
                     break;
                 case 2:
@@ -68,14 +93,13 @@ public class HangedMansGame {
                     }
                     break;
                 case 3:
-                    System.out.println("GAME OVER !");
                     System.exit(0);
                     break;
             }
         }
         System.out.println(categorie + " - " + difficulty + " - " + language);
 
-        String game = new GameService(new ArrayList<>(Arrays.asList("ACDC", "BABAB"))).startGame(new Scanner(System.in));
+        String game = new GameService(databaseProvider.getWordsByCatId(databaseProvider.getCatIdByName(categorySelected))).startGame(new Scanner(System.in));
         if (game.equals("")) {
             System.out.println("LOOOOSSERRR");
         } else {

@@ -26,6 +26,10 @@ public enum MenuType {
         return options;
     }
 
+    public void setOptions(ArrayList<String> options) {
+        this.options = options;
+    }
+
     public String parseMenu() {
         StringBuilder str;
         str = new StringBuilder("### MENU " + this.menuType + " ###\n");
