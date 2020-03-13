@@ -1,9 +1,6 @@
 package fr.ynov.tdd;
 
 import fr.ynov.tdd.domain.MenuType;
-
-import java.util.Scanner;
-
 import fr.ynov.tdd.domain.services.GameService;
 
 import java.util.ArrayList;
@@ -15,14 +12,14 @@ public class HangedMansGame {
     public static void main(String[] args) {
         boolean isReady = false;
         String categorie = null;
-        String dificulty = "Facile";
+        String difficulty = "Facile";
         String language = "Français";
+        Scanner sc = new Scanner(System.in);
+
         while (!isReady) {
-            Scanner sc = new Scanner(System.in);
             System.out.println(MenuType.START_APP_MENU.parseMenu());
             int choixMain = sc.nextInt();
             while (choixMain > MenuType.START_APP_MENU.getOptions().size() || choixMain < 1) {
-                sc = new Scanner(System.in);
                 System.out.println(MenuType.START_APP_MENU.parseMenu());
                 choixMain = sc.nextInt();
             }
@@ -30,7 +27,6 @@ public class HangedMansGame {
                 case 1:
                     int choixCategory = -1;
                     while (choixCategory > MenuType.CHOOSE_CATEGORY_MENU.getOptions().size() || choixCategory < 1) {
-                        sc = new Scanner(System.in);
                         System.out.println(MenuType.CHOOSE_CATEGORY_MENU.parseMenu());
                         choixCategory = sc.nextInt();
                     }
@@ -40,7 +36,6 @@ public class HangedMansGame {
                 case 2:
                     int choixOption = -1;
                     while (choixOption > MenuType.OPTION_MENU.getOptions().size() || choixOption < 1) {
-                        sc = new Scanner(System.in);
                         System.out.println(MenuType.OPTION_MENU.parseMenu());
                         choixOption = sc.nextInt();
                     }
@@ -48,16 +43,14 @@ public class HangedMansGame {
                         case 1:
                             int choixDificulty = -1;
                             while (choixDificulty > MenuType.CHOOSE_DIFICULTY_MENU.getOptions().size() || choixDificulty < 1) {
-                                sc = new Scanner(System.in);
                                 System.out.println(MenuType.CHOOSE_DIFICULTY_MENU.parseMenu());
                                 choixDificulty = sc.nextInt();
-                                dificulty = MenuType.CHOOSE_DIFICULTY_MENU.getOptions().get(choixDificulty - 1);
+                                difficulty = MenuType.CHOOSE_DIFICULTY_MENU.getOptions().get(choixDificulty - 1);
                             }
                             break;
                         case 2:
                             int choixLanguage = -1;
                             while (choixLanguage > MenuType.CHOOSE_LANGUAGE_MENU.getOptions().size() || choixLanguage < 1) {
-                                sc = new Scanner(System.in);
                                 System.out.println(MenuType.CHOOSE_LANGUAGE_MENU.parseMenu());
                                 choixLanguage = sc.nextInt();
                                 language = MenuType.CHOOSE_LANGUAGE_MENU.getOptions().get(choixLanguage - 1);
@@ -80,7 +73,7 @@ public class HangedMansGame {
                     break;
             }
         }
-        System.out.println(categorie + "   " + dificulty + "    " + language);
+        System.out.println(categorie + " - " + difficulty + " - " + language);
 
         String game = new GameService(new ArrayList<>(Arrays.asList("ACDC", "BABAB"))).startGame(new Scanner(System.in));
         if (game.equals("")) {

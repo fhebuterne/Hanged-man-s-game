@@ -5,10 +5,10 @@ import java.util.Arrays;
 
 public enum MenuType {
     START_APP_MENU("START", new ArrayList<>(Arrays.asList("Jouer", "Options", "Quitter"))),
-    OPTION_MENU(" OPTION", new ArrayList<>(Arrays.asList("Difficulté", "Language", "Credit","Retour"))),
-    CHOOSE_CATEGORY_MENU("CATEGORIE", new ArrayList<>(Arrays.asList("Annimaux","Personne"))),
-    CHOOSE_DIFICULTY_MENU("DIFICULTE", new ArrayList<>(Arrays.asList("Facile","Dificile"))),
-    CHOOSE_LANGUAGE_MENU("LANGUE", new ArrayList<>(Arrays.asList("Français","Bèlge","Quebequois")));
+    OPTION_MENU(" OPTION", new ArrayList<>(Arrays.asList("Difficulté", "Language", "Credit", "Retour"))),
+    CHOOSE_CATEGORY_MENU("CATEGORIE", new ArrayList<>(Arrays.asList("Animaux", "Personne"))),
+    CHOOSE_DIFICULTY_MENU("DIFFICULTE", new ArrayList<>(Arrays.asList("Facile", "Difficile"))),
+    CHOOSE_LANGUAGE_MENU("LANGUE", new ArrayList<>(Arrays.asList("Français", "Bèlge", "Québécois")));
 
     private String menuType;
     private ArrayList<String> options;
@@ -25,18 +25,14 @@ public enum MenuType {
     public ArrayList<String> getOptions() {
         return options;
     }
-    public String parseMenu (){
-        // Initialisation du menu
+
+    public String parseMenu() {
         StringBuilder str;
         str = new StringBuilder("### MENU " + this.menuType + " ###\n");
-        //Ajout des élements au menu
-        for (String item: this.options)
-        {
+        for (String item : this.options) {
             str.append(this.options.indexOf(item) + 1).append(" - ").append(item).append("\n");
         }
-        //Ajout de la question au menu
         str.append("Quel est votre choix ?\n");
         return str.toString();
     }
-
 }
