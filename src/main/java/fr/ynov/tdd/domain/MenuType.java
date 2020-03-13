@@ -26,7 +26,14 @@ public enum MenuType {
         return options;
     }
     public String parseMenu (){
-        return "";
+        StringBuilder str;
+        str = new StringBuilder("### MENU " + this.menuType + " ###\n");
+        for (String item: this.options)
+        {
+            str.append(this.options.indexOf(item) + 1).append(" - ").append(item).append("\n");
+        }
+        str.append("Quel est votre choix ?\n");
+        return str.toString();
     }
 
 }
