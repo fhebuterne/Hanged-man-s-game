@@ -16,5 +16,4 @@ public class HangedMansGame {
             System.out.println("Bravo vous avez trouvé le mot " + game);
         }
     }
-
 }
