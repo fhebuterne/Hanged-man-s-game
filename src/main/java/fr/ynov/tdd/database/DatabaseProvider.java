@@ -4,6 +4,7 @@ import fr.ynov.tdd.domain.DatabaseEnum;
 import fr.ynov.tdd.domain.Statistic;
 
 import java.sql.*;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -18,11 +19,9 @@ public class DatabaseProvider {
         PROPERTIES.put("user", DatabaseEnum.DATABASE_USER.getValue());
         PROPERTIES.put("password", DatabaseEnum.DATABASE_PASSWORD.getValue());
 
-        if (shouldCreateDbInMemory) {
-            connectionURL = String.format("jdbc:h2:mem:%s;mode=MySQL;mv_store=false", DatabaseEnum.DATABASE_NAME.getValue());
-        } else {
-            connectionURL = String.format("jdbc:h2:./%s;mode=MySQL;mv_store=false", DatabaseEnum.DATABASE_NAME.getValue());
-        }
+        connectionURL = MessageFormat.format("jdbc:h2:{0}{1};mode=MySQL;mv_store=false",
+                shouldCreateDbInMemory ? "mem:" : "./",
+                DatabaseEnum.DATABASE_NAME.getValue());
     }
 
     public void initDatabase() {
